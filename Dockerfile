@@ -1,24 +1,19 @@
 FROM node:20 AS builder
-WORKDIR /app
+WORKDIR /app/flipr-fullstack-app
 
 # Copy project
 COPY . .
 
-# Build frontend
-RUN cd client-legacy && npm ci && npx tsc && mkdir -p dist/pages dist/css && cp src/pages/*.html dist/pages/ && cp src/css/*.css dist/css/
-
-# Build backend
+# Build backend (runs frontend prebuild and packages assets into server/public-client/dist)
 RUN cd server && npm ci && npm run build
 
 FROM node:20-alpine AS runner
-WORKDIR /app/server
+WORKDIR /app/flipr-fullstack-app/server
 
-# Copy backend artifacts
-COPY --from=builder /app/server/dist ./dist
-COPY --from=builder /app/server/package.json ./
-
-# Copy frontend built assets to expected relative path
-COPY --from=builder /app/client-legacy/dist ../client-legacy/dist
+# Copy backend artifacts and packaged frontend
+COPY --from=builder /app/flipr-fullstack-app/server/dist ./dist
+COPY --from=builder /app/flipr-fullstack-app/server/public-client ./public-client
+COPY --from=builder /app/flipr-fullstack-app/server/package.json ./
 
 # Install production deps only
 RUN npm ci --omit=dev
