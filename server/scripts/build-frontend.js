@@ -3,12 +3,18 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..', '..');
-const clientDir = path.join(rootDir, 'client-legacy');
+const clientCandidates = ['client-legacy', 'client'];
+const clientDir =
+  clientCandidates
+    .map((d) => path.join(rootDir, d))
+    .find((p) => fs.existsSync(p)) || path.join(rootDir, 'client-legacy');
 const clientDist = path.join(clientDir, 'dist');
 const pagesSrc = path.join(clientDir, 'src', 'pages');
 const cssSrc = path.join(clientDir, 'src', 'css');
 const pagesDist = path.join(clientDist, 'pages');
 const cssDist = path.join(clientDist, 'css');
+const serverDir = path.join(rootDir, 'server');
+const packagedDist = path.join(serverDir, 'public-client', 'dist');
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
@@ -25,15 +31,31 @@ function copyAll(srcDir, destDir) {
   }
 }
 
+function copyDirRecursive(src, dest) {
+  ensureDir(dest);
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else if (entry.isFile()) {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
 function run() {
   try {
-    console.log('→ Building frontend (client-legacy)...');
+    console.log(`→ Building frontend (${path.basename(clientDir)})...`);
     execSync('npm install', { cwd: clientDir, stdio: 'inherit' });
     execSync('npx tsc', { cwd: clientDir, stdio: 'inherit' });
     ensureDir(pagesDist);
     ensureDir(cssDist);
     copyAll(pagesSrc, pagesDist);
     copyAll(cssSrc, cssDist);
+    // Package built frontend into server/public-client/dist for deployment
+    copyDirRecursive(clientDist, packagedDist);
     console.log('✓ Frontend build completed');
   } catch (err) {
     console.error('✗ Frontend build failed:', err.message || err);

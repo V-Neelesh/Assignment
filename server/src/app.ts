@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import projectRoutes from './routes/project.routes';
 import clientRoutes from './routes/client.routes';
 import contactRoutes from './routes/contact.routes';
@@ -18,15 +19,27 @@ app.use(express.urlencoded({ extended: true }));
 const uploadsPath = path.join(process.cwd(), 'uploads');
 app.use('/uploads', express.static(uploadsPath));
 
-// Serve images (fallback assets) from client-legacy build and public folders
-const distImagesPath = path.join(process.cwd(), '../client-legacy/dist/images');
-const publicImagesPath = path.join(process.cwd(), '../client-legacy/public/images');
-app.use('/images', express.static(distImagesPath));
-// Fallback to public images if dist doesn't contain them
-app.use('/images', express.static(publicImagesPath));
+// Resolve frontend dist path (prefer local packaged assets, then client-legacy, then client)
+const localClientDist = path.join(process.cwd(), 'public-client', 'dist');
+const legacyClientDist = path.join(process.cwd(), '../client-legacy/dist');
+const altClientDist = path.join(process.cwd(), '../client/dist');
+const clientBuildPath =
+  [localClientDist, legacyClientDist, altClientDist].find((p) => fs.existsSync(p)) || legacyClientDist;
 
-// Serve Frontend Static Files
-const clientBuildPath = path.join(process.cwd(), '../client-legacy/dist');
+// Serve images from whichever dist/public exists
+const imageCandidates = [
+  path.join(localClientDist, 'images'),
+  path.join(legacyClientDist, 'images'),
+  path.join(altClientDist, 'images'),
+  path.join(process.cwd(), '../client-legacy/public/images'),
+  path.join(process.cwd(), '../client/public/images'),
+];
+for (const imgPath of imageCandidates) {
+  if (fs.existsSync(imgPath)) {
+    app.use('/images', express.static(imgPath));
+  }
+}
+
 app.use(express.static(clientBuildPath));
 
 // API Routes
