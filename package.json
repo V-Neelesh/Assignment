@@ -1,0 +1,13 @@
+{
+  "name": "agency-fullstack-app",
+  "version": "1.0.0",
+  "description": "Complete Agency full-stack web application",
+  "scripts": {
+    "install-all": "cd server && npm install && cd ../client && echo 'Client setup complete'",
+    "build-backend": "cd server && npm run build",
+    "start-backend": "cd server && npm start",
+    "dev-backend": "cd server && npm run dev",
+    "build-frontend": "echo 'Frontend is vanilla HTML/CSS/TS - no build needed'",
+    "serve-frontend": "cd client && npx http-server"
+  }
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agency - Admin Panel</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <!-- Admin Header -->
+  <div class="admin-header">
+    <div class="container">
+      <h1>Admin Panel</h1>
+      <p>Manage Projects, Clients, Contacts & Newsletter</p>
+    </div>
+  </div>
+
+  <!-- Admin Container -->
+  <div class="admin-container">
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
+      <button class="tab-button active" data-tab="projects">
+        Projects
+      </button>
+      <button class="tab-button" data-tab="clients">Clients</button>
+      <button class="tab-button" data-tab="contacts">Contacts</button>
+      <button class="tab-button" data-tab="newsletter">Newsletter</button>
+    </div>
+
+    <!-- ===== PROJECTS TAB ===== -->
+    <div id="projects-content" class="tab-content active">
+      <div class="form-section">
+        <h3>Add New Project</h3>
+        <form id="project-form" class="form-grid full">
+          <div class="form-group">
+            <label for="project-name">Project Name *</label>
+            <input
+              type="text"
+              id="project-name"
+              name="name"
+              required
+              placeholder="Enter project name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="project-description">Description *</label>
+            <textarea
+              id="project-description"
+              name="description"
+              required
+              placeholder="Enter project description"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="project-image">Project Image *</label>
+            <input
+              type="file"
+              id="project-image"
+              name="image"
+              accept="image/*"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%">
+            Add Project
+          </button>
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h3>Projects List</h3>
+        <div id="projects-list">
+          <!-- Projects will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CLIENTS TAB ===== -->
+    <div id="clients-content" class="tab-content">
+      <div class="form-section">
+        <h3>Add New Client</h3>
+        <form id="client-form" class="form-grid full">
+          <div class="form-group">
+            <label for="client-name">Client Name *</label>
+            <input
+              type="text"
+              id="client-name"
+              name="name"
+              required
+              placeholder="Enter client name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="client-designation">Designation *</label>
+            <input
+              type="text"
+              id="client-designation"
+              name="designation"
+              required
+              placeholder="e.g., CEO, Manager"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="client-description">Description *</label>
+            <textarea
+              id="client-description"
+              name="description"
+              required
+              placeholder="Enter client feedback/description"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="client-image">Client Image *</label>
+            <input
+              type="file"
+              id="client-image"
+              name="image"
+              accept="image/*"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%">
+            Add Client
+          </button>
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h3>Clients List</h3>
+        <div id="clients-list">
+          <!-- Clients will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONTACTS TAB ===== -->
+    <div id="contacts-content" class="tab-content">
+      <div class="form-section">
+        <h3>Contact Form Submissions</h3>
+        <div id="contacts-list">
+          <!-- Contacts will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NEWSLETTER TAB ===== -->
+    <div id="newsletter-content" class="tab-content">
+      <div class="form-section">
+        <h3>Newsletter Subscribers</h3>
+        <div id="newsletter-list">
+          <!-- Newsletter subscribers will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TypeScript Bundle -->
+  <script src="/ts/admin.js" type="module"></script>
+</body>
+</html>
