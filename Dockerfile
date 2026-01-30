@@ -14,9 +14,10 @@ WORKDIR /app/flipr-fullstack-app/server
 COPY --from=builder /app/flipr-fullstack-app/server/dist ./dist
 COPY --from=builder /app/flipr-fullstack-app/server/public-client ./public-client
 COPY --from=builder /app/flipr-fullstack-app/server/package.json ./
+COPY --from=builder /app/flipr-fullstack-app/server/package-lock.json ./
 
 # Install production deps only
-RUN npm ci --omit=dev
+RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev; fi
 
 EXPOSE 5000
 CMD ["node", "dist/server.js"]
