@@ -4,6 +4,7 @@
   "description": "Backend for Agency placement assignment",
   "main": "dist/server.js",
   "scripts": {
+    "prebuild": "node scripts/build-frontend.js",
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
